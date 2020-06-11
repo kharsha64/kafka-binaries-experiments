@@ -17,18 +17,22 @@ public class Producer {
 
         KafkaProducer<String, String> kafkaProducer = new KafkaProducer<>(properties);
 
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>("topic_two", "test_message2");
+        for (int i = 0; i < 50; i++) {
 
-        kafkaProducer.send(producerRecord, (recordMetadata, e) -> {
-            if (e == null) {
-                log.info("Metadata Information- \n" +
-                        "Topic -" + recordMetadata.topic() + " \n" +
-                        "Offset -" + recordMetadata.offset() + " \n" +
-                        "Partition -" + recordMetadata.partition());
-            } else {
-                log.error(" Error - {0}", e);
-            }
-        });
+            ProducerRecord<String, String> producerRecord = new ProducerRecord<>("hell_topic","_id_" + i, "hell_V5_message - "+i);
+            log.info(" Key : " + "_id_" + i);
+
+            kafkaProducer.send(producerRecord, (recordMetadata, e) -> {
+                if (e == null) {
+                    log.info("Metadata Information- \n" +
+                            "Topic -" + recordMetadata.topic() + " \n" +
+                            "Offset -" + recordMetadata.offset() + " \n" +
+                            "Partition -" + recordMetadata.partition());
+                } else {
+                    log.error(" Error - {}", e.getMessage());
+                }
+            });
+        }
 
         kafkaProducer.flush();
         kafkaProducer.close();
